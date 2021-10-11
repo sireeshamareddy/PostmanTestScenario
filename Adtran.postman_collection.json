@@ -1,0 +1,1145 @@
+{
+	"info": {
+		"_postman_id": "3b7cc05b-3c8e-41b3-a6c8-40d769853f35",
+		"name": "Adtran",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getConfiguredServices",
+			"item": [
+				{
+					"name": "getConfiguredServices-valid-subId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonObject = xml2Json(responseBody);\r",
+									"pm.test('validating dataServiceStatus', function(){\r",
+									"\r",
+									"    console.log(jsonObject);\r",
+									"\r",
+									"    var dataServiceStatus = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['dataServiceStatus'];\r",
+									"    pm.expect(dataServiceStatus).to.eqls(\"ENABLED\");\r",
+									"\r",
+									"})\r",
+									"\r",
+									"pm.test('validating serviceTemplateName', function(){\r",
+									"\r",
+									"    var serviceTemplateName = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['serviceTemplateName'];\r",
+									"    pm.expect(serviceTemplateName).to.eqls(\"testServiceTemplate\");\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test('validating success status', function(){\r",
+									"\r",
+									"    var success = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['success'];\r",
+									"    pm.expect(success).to.eqls(\"true\");\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test('Validating serviceConfigured', function(){\r",
+									"\r",
+									"    console.log(jsonObject);\r",
+									"\r",
+									"    pm.expect(jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['serviceConfigured']).to.eqls(\"true\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test('validating bondedService', function(){\r",
+									"\r",
+									"    var bondedService = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['bondedService'];\r",
+									"    pm.expect(bondedService).to.eqls(\"false\");\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test('Validating subID', function(){\r",
+									"\r",
+									"    var subId = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['serviceInstanceSummaryResponse'] ['subscriberId'];\r",
+									"    pm.expect(subId).to.eqls(\"DemoPrePr\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n            <messageType>REQUEST</messageType>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesRequest>\r\n            <subscriberId>DemoPrePr</subscriberId>\r\n        </ser:getConfiguredServicesRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8090/ws/getConfiguredServices",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"ws",
+								"getConfiguredServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getConfiguredServices-invalid-subId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonObject = xml2Json(responseBody);\r",
+									"pm.test('validating errorCode', function(){\r",
+									"\r",
+									"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+									"\r",
+									"    pm.expect(errorCode).to.eqls(\"28\");\r",
+									"})\r",
+									"\r",
+									"pm.test('validating message', function(){\r",
+									"\r",
+									"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+									"    pm.expect(message).to.eqls(\"invalid input, no ONT is configured on MCP with the given identifier:Demo\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n            <messageType>REQUEST</messageType>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesRequest>\r\n            <subscriberId>Demo</subscriberId>\r\n        </ser:getConfiguredServicesRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8090/ws/getConfiguredServices",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"ws",
+								"getConfiguredServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getConfiguredServices-blank-subId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonObject = xml2Json(responseBody);\r",
+									"pm.test('validating errorCode', function(){\r",
+									"\r",
+									"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+									"\r",
+									"    pm.expect(errorCode).to.eqls(\"28\");\r",
+									"})\r",
+									"\r",
+									"pm.test('validating message', function(){\r",
+									"\r",
+									"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+									"    pm.expect(message).to.eqls(\"Value of subscriberId is empty, please send a valid subscriberId\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n            <messageType>REQUEST</messageType>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesRequest>\r\n            <subscriberId></subscriberId>\r\n        </ser:getConfiguredServicesRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8090/ws/getConfiguredServices",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"ws",
+								"getConfiguredServices"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "getConfiguredServicesOnEquipment",
+			"item": [
+				{
+					"name": "Equipment",
+					"item": [
+						{
+							"name": "getconfigeqp-invalid-equipment",
+							"item": [
+								{
+									"name": "getConfiguredServicesOnEquipment-invalid-ip_addr",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+													"\r",
+													"    pm.expect(errorCode).to.eqls(\"36\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"\r",
+													"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Eqpt information is invalid, no management-domain configured on MCP for the given IP:10.51.2.10\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.2.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-invalid-shelf",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+													"\r",
+													"    pm.expect(errorCode).to.eqls(\"36\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"\r",
+													"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Eqpt information is invalid, no ONT is connected on the interface-id: gpon 6/2/1\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>6</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-invalid-slot",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+													"\r",
+													"    pm.expect(errorCode).to.eqls(\"36\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"\r",
+													"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Eqpt information is invalid, no ONT is connected on the interface-id: gpon 1/7/1\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>7</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-invalid-pon",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+													"\r",
+													"    pm.expect(errorCode).to.eqls(\"36\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"\r",
+													"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Eqpt information is invalid, no ONT is connected on the interface-id: gpon 1/2/5\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>5</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-invalid-ont",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+													"\r",
+													"    pm.expect(errorCode).to.eqls(\"28\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"\r",
+													"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+													"    pm.expect(message).to.eqls(\"No ONT is configured with the received ont or port value\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>6</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "getconfigequo-blank-equipment",
+							"item": [
+								{
+									"name": "getconfigeqp-blank-ipaddr",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['errorCode'];\r",
+													"    pm.expect(errorCode).to.eqls(\"1\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"    var message = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Missing required fields on Eqpt information, please send valid eqpt details\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr></ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-blank-shelf",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['errorCode'];\r",
+													"    pm.expect(errorCode).to.eqls(\"1\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"    var message = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Missing required fields on Eqpt information, please send valid eqpt details\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf></shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-blank-slot",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['errorCode'];\r",
+													"    pm.expect(errorCode).to.eqls(\"1\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"    var message = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Missing required fields on Eqpt information, please send valid eqpt details\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot></slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-blank-pon",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['errorCode'];\r",
+													"    pm.expect(errorCode).to.eqls(\"1\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"    var message = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Missing Pon information on Equipment data, please send valid eqpt details\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.2.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon></pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getconfigeqp-blank-ont",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonObject = xml2Json(responseBody);\r",
+													"pm.test('validating errorCode', function(){\r",
+													"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['errorCode'];\r",
+													"    pm.expect(errorCode).to.eqls(\"1\");\r",
+													"})\r",
+													"\r",
+													"pm.test('validating message', function(){\r",
+													"    var message = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault'] ['detail'] ['ns3:aoewsFaultInfo'] ['message'];\r",
+													"    pm.expect(message).to.eqls(\"Missing ont information on Equipment data, please send valid eqpt details\");\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "text/xml",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.2.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont></ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+											"options": {
+												"raw": {
+													"language": "xml"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8090",
+											"path": [
+												"ws",
+												"getConfiguredServicesOnEquipment"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "getConfiguredServicesOnEquipment-valid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonObject = xml2Json(responseBody);\r",
+											"pm.test('Validating voiceServiceStatus', function(){\r",
+											"\r",
+											"    var voiceServiceStatus = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['voiceServiceStatus'];\r",
+											"    pm.expect(voiceServiceStatus).to.eqls(\"ENABLED\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating serviceTemplateName', function(){\r",
+											"\r",
+											"    var serviceTemplateName = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateName'];\r",
+											"    pm.expect(serviceTemplateName).to.eqls(\"serviceTemplateOfDemoSubID\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating success status', function(){\r",
+											"\r",
+											"    var success = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['success'];\r",
+											"    pm.expect(success).to.eqls(\"true\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating serviceConfigured', function(){\r",
+											"\r",
+											"    var serviceConfigured = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceConfigured'];\r",
+											"    pm.expect(serviceConfigured).to.eqls(\"true\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating bondedService', function(){\r",
+											"\r",
+											"    var bondedService = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['bondedService'];\r",
+											"    pm.expect(bondedService).to.eqls(\"false\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating serviceType', function(){\r",
+											"\r",
+											"    var sertype = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateNamesMap'] ['serviceTemplateEntry'] ['serviceType'];\r",
+											"    pm.expect(sertype).to.eqls(\"VOICE\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating templateName', function(){\r",
+											"\r",
+											"    var templateName = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateNamesMap'] ['serviceTemplateEntry'] ['templateName'];\r",
+											"    pm.expect(templateName).to.eqls(\"serviceTemplateOfDemoSubID\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating circuitDescription', function(){\r",
+											"\r",
+											"    var circuitDescription = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['circuitDescription'];\r",
+											"    pm.expect(circuitDescription).to.eqls(\"ONU-ID: 1\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('Validating Response for subscriberId', function(){\r",
+											"\r",
+											"    console.log(jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['subscriberId']);\r",
+											"    var subscriberId = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['subscriberId'];\r",
+											"    pm.expect(subscriberId).to.eql(\"DemoSubID\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <equipment xsi:type=\"ser:gpon_eqpt\"\r\n\t\t\t\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                <ip_addr>10.51.27.10</ip_addr>\r\n                <shelf>1</shelf>\r\n                <slot>2</slot>\r\n                <pon>1</pon>\r\n                <ont>1</ont>\r\n            </equipment>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"ws",
+										"getConfiguredServicesOnEquipment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SerialNumber",
+					"item": [
+						{
+							"name": "getConfiguredServicesOnEquipment-valid-serialNumber",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonObject = xml2Json(responseBody);\r",
+											"pm.test('validating dataServiceStatus', function(){\r",
+											"    \r",
+											"    var dataServiceStatus = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['dataServiceStatus'];\r",
+											"    pm.expect(dataServiceStatus).to.eqls(\"ENABLED\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating serviceTemplateName', function(){\r",
+											"\r",
+											"    \r",
+											"    var serviceTemplateName = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateName'];\r",
+											"    pm.expect(serviceTemplateName).to.eqls(\"testServiceTemplate\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating success status', function(){\r",
+											"\r",
+											"    \r",
+											"    var success = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['success'];\r",
+											"    pm.expect(success).to.eqls(\"true\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating serviceConfigured', function(){\r",
+											"\r",
+											"    \r",
+											"    var serviceConfigured = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceConfigured'];\r",
+											"    pm.expect(serviceConfigured).to.eqls(\"true\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating bondedService', function(){\r",
+											"\r",
+											"    \r",
+											"    var bondedService = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['bondedService'];\r",
+											"    pm.expect(bondedService).to.eqls(\"false\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating serviceType', function(){\r",
+											"\r",
+											"    \r",
+											"    var sertype = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateNamesMap'] ['serviceTemplateEntry'] ['serviceType'];\r",
+											"    pm.expect(sertype).to.eqls(\"DATA\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating templateName', function(){\r",
+											"\r",
+											"    \r",
+											"    var templateName = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['serviceTemplateNamesMap'] ['serviceTemplateEntry'] ['templateName'];\r",
+											"    pm.expect(templateName).to.eqls(\"testServiceTemplate\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('validating circuitDescription', function(){\r",
+											"\r",
+											"    \r",
+											"    var circuitDescription = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['circuitDescription'];\r",
+											"    pm.expect(circuitDescription).to.eqls(\"ONU-ID: 28\");\r",
+											"})\r",
+											"\r",
+											"\r",
+											"pm.test('Validating Response for subscriberId', function(){\r",
+											"\r",
+											"    \r",
+											"    console.log(jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['subscriberId']);\r",
+											"    var subscriberId = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['ns4:getConfiguredServicesOnEquipmentResponse'] ['summaryResponseList'] ['subscriberId'];\r",
+											"    pm.expect(subscriberId).to.eql(\"DemoPrePr\")\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n\t<soapenv:Header>\r\n\t\t<mod:aoewsHeader>\r\n\t\t\t<aoewss>\r\n\t\t\t\t<userName>prodapt</userName>\r\n\t\t\t\t<password>Pr0dapt!!</password>\r\n\t\t\t</aoewss>\r\n\t\t</mod:aoewsHeader>\r\n\t</soapenv:Header>\r\n\t<soapenv:Body>\r\n\t\t<ser:getConfiguredServicesOnEquipmentRequest>\r\n\t\t\t<serialNumberWrapper>\r\n\t\t\t\t<serialNumber>adtn11009900</serialNumber>\r\n\t\t\t</serialNumberWrapper>\r\n\t\t</ser:getConfiguredServicesOnEquipmentRequest>\r\n\t</soapenv:Body>\r\n</soapenv:Envelope>"
+								},
+								"url": {
+									"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"ws",
+										"getConfiguredServicesOnEquipment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getConfiguredServicesOnEquipment-invalid-serialNumber",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonObject = xml2Json(responseBody);\r",
+											"pm.test('validating errorCode', function(){\r",
+											"\r",
+											"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+											"\r",
+											"    pm.expect(errorCode).to.eqls(\"28\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating message', function(){\r",
+											"\r",
+											"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+											"    pm.expect(message).to.eqls(\"invalid input, no ONT is configured on MCP with the given identifier:abc1233\");\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <serialNumberWrapper>\r\n                <serialNumber>abc1233</serialNumber>\r\n            </serialNumberWrapper>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"ws",
+										"getConfiguredServicesOnEquipment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getConfiguredServicesOnEquipment-blank-serialNumber",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonObject = xml2Json(responseBody);\r",
+											"pm.test('validating errorCode', function(){\r",
+											"\r",
+											"    var errorCode = jsonObject['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']  ['detail'] ['ns3:aoewsFaultInfo']['errorCode'];\r",
+											"\r",
+											"    pm.expect(errorCode).to.eqls(\"28\");\r",
+											"})\r",
+											"\r",
+											"pm.test('validating message', function(){\r",
+											"\r",
+											"    var message = jsonObject ['SOAP-ENV:Envelope'] ['SOAP-ENV:Body'] ['SOAP-ENV:Fault']['detail'] ['ns3:aoewsFaultInfo']   ['message'];\r",
+											"    pm.expect(message).to.eqls(\"Value of SerialNumber is empty, please send a valid serial number\");\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "text/xml",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<soapenv:Envelope\r\n\txmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n\txmlns:mod=\"http://models.ws.common.adtran.com\"\r\n\txmlns:ser=\"http://serviceactivation.models.ws.common.adtran.com\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n    <soapenv:Header>\r\n        <mod:aoewsHeader>\r\n            <aoewss>\r\n                <userName>prodapt</userName>\r\n                <password>Pr0dapt!!</password>\r\n            </aoewss>\r\n        </mod:aoewsHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <ser:getConfiguredServicesOnEquipmentRequest>\r\n            <serialNumberWrapper>\r\n                <serialNumber></serialNumber>\r\n            </serialNumberWrapper>\r\n        </ser:getConfiguredServicesOnEquipmentRequest>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:8090/ws/getConfiguredServicesOnEquipment",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"ws",
+										"getConfiguredServicesOnEquipment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
